@@ -16,7 +16,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /ingestion
+WORKDIR /app
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
@@ -27,9 +27,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install -r requirements.txt
 
 # Copy the source code into the container.
-COPY . .
+COPY . /app
 
 EXPOSE 8080
 
 # Run the application.
-ENTRYPOINT ["python", "ingestion.py"]
+CMD ["fastapi", "run", "finance_pipeline/api.py", "--port", "8080"]
